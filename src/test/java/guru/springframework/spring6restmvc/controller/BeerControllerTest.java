@@ -61,6 +61,15 @@ class BeerControllerTest {
     public static final String PASSWORD = "password";
 
     @Test
+    void testInvalidAuthentication() throws Exception{
+        given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID())
+                        .with(httpBasic("user2", PASSWORD)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void testPatchBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().get(0);
 
